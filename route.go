@@ -31,7 +31,7 @@ func router(gs *Oauth2Server) {
 
 	homeMain.GET("/protocol", func(c *gin.Context) {
 		cli := getClient(c)
-		c.HTML(http.StatusOK, "protocol.tmpl", gin.H{"title": GetTitleFromClient(cli)})
+		c.HTML(http.StatusOK, "protocol.html", gin.H{"title": GetTitleFromClient(cli)})
 	})
 	homeMain.GET("/token", tokenGet)
 	homeMain.POST("/token", tokenPost)

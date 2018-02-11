@@ -1,6 +1,6 @@
-# Auth2接口文档1  
+# Auth2接口文档
 
-### 正式域名：oa.mana.com  
+### 配置域名：oa.mana.com
 ### 测试域名：oatest.mana.com
 
 # Step 1. 登陆授权

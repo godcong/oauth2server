@@ -43,7 +43,7 @@ func loginGet(c *gin.Context) {
 	forg := ParseURL(c, "/forget")
 	forg.RawQuery = c.Request.URL.RawQuery
 
-	c.HTML(http.StatusOK, "login.tmpl", gin.H{
+	c.HTML(http.StatusOK, "login.html", gin.H{
 		"title":     GetTitleFromClient(client),
 		"regurl":    reg.String(),
 		"forgeturl": forg.String(),
@@ -230,7 +230,7 @@ func registerGet(c *gin.Context) {
 	}
 	cli := getClient(c)
 
-	c.HTML(http.StatusOK, "register.tmpl", gin.H{"title": GetTitleFromClient(cli)})
+	c.HTML(http.StatusOK, "register.html", gin.H{"title": GetTitleFromClient(cli)})
 }
 
 func registerPost(c *gin.Context) {
@@ -251,7 +251,7 @@ func registerPost(c *gin.Context) {
 
 	log.Println("username:", uname, " mobile:", mobile, " password:", password, " code:", code) ///
 	user := model.NewUser()
-	if uname == "" || mobile == "" || password == "" || vpassword == "" {
+	if uname == "" || password == "" || vpassword == "" {
 		c.JSON(http.StatusOK, A_MUST_NOT_BE_NULL)
 		return
 	}
@@ -272,28 +272,28 @@ func registerPost(c *gin.Context) {
 		return
 	}
 
-	if b, e := model.VerifyMobile(mobile); b == false || e != nil {
-		c.JSON(http.StatusOK, A_MOBILE_LENGTH_WRONG)
-		return
-	}
+	//if b, e := model.VerifyMobile(mobile); b == false || e != nil {
+	//	c.JSON(http.StatusOK, A_MOBILE_LENGTH_WRONG)
+	//	return
+	//}
 
-	user.GetUserByMobile(mobile)
-	if !user.IsNull() {
-		c.JSON(http.StatusOK, A_MOBILE_IS_EXISTS)
-		return
-	}
+	//user.GetUserByMobile(mobile)
+	//if !user.IsNull() {
+	//	c.JSON(http.StatusOK, A_MOBILE_IS_EXISTS)
+	//	return
+	//}
 
-	rmap := base.MessageCheck(mobile, code)
+	//rmap := base.MessageCheck(mobile, code)
+	//
+	//if rmap == nil {
+	//	c.JSON(http.StatusOK, A_MESSAGE_CHECK_FAILED)
+	//	return
+	//}
 
-	if rmap == nil {
-		c.JSON(http.StatusOK, A_MESSAGE_CHECK_FAILED)
-		return
-	}
-
-	if v, b := (*rmap)["code"]; b == false || v != "0" {
-		c.JSON(http.StatusOK, A_MESSAGE_CHECK_FAILED)
-		return
-	}
+	//if v, b := (*rmap)["code"]; b == false || v != "0" {
+	//	c.JSON(http.StatusOK, A_MESSAGE_CHECK_FAILED)
+	//	return
+	//}
 	log.Println("register uid: " + user.ID.String())
 	if user.IsNull() {
 		user.Mobile = mobile
@@ -423,12 +423,12 @@ func registerPhoneCheck(c *gin.Context) {
 
 func forgetGet(c *gin.Context) {
 	cli := getClient(c)
-	c.HTML(http.StatusOK, "forget.tmpl", gin.H{"title": GetTitleFromClient(cli)})
+	c.HTML(http.StatusOK, "forget.html", gin.H{"title": GetTitleFromClient(cli)})
 }
 
 func resetGet(c *gin.Context) {
 	cli := getClient(c)
-	c.HTML(http.StatusOK, "reset.tmpl", gin.H{"title": GetTitleFromClient(cli)})
+	c.HTML(http.StatusOK, "reset.html", gin.H{"title": GetTitleFromClient(cli)})
 }
 
 func forgetPost(c *gin.Context) {
@@ -541,7 +541,7 @@ func forgetPost(c *gin.Context) {
 
 func changeGet(c *gin.Context) {
 	cli := getClient(c)
-	c.HTML(http.StatusOK, "change.tmpl", gin.H{"title": GetTitleFromClient(cli)})
+	c.HTML(http.StatusOK, "change.html", gin.H{"title": GetTitleFromClient(cli)})
 }
 
 func changePost(c *gin.Context) {
@@ -627,7 +627,7 @@ func redirectToSign(c *gin.Context) {
 //}
 
 func completeUserInfoGet(c *gin.Context) {
-	c.HTML(http.StatusOK, "completeuserinfo.tmpl", gin.H{})
+	c.HTML(http.StatusOK, "completeuserinfo.html", gin.H{})
 }
 
 //完善用户信息
@@ -649,7 +649,7 @@ func completeUserInfoPost(c *gin.Context) {
 	cid := ParseClientUser(c)
 	log.Println("register cid: " + cid)
 
-	if uname == "" || password == "" || vpassword == "" || code == "" {
+	if uname == "" || password == "" || vpassword == "" {
 		c.JSON(http.StatusOK, A_MUST_NOT_BE_NULL)
 		return
 	}
@@ -688,17 +688,17 @@ func completeUserInfoPost(c *gin.Context) {
 		}
 	}
 
-	rmap := base.MessageCheck(mobile, code)
-
-	if rmap == nil {
-		c.JSON(http.StatusOK, A_MESSAGE_CHECK_FAILED)
-		return
-	}
-
-	if v, b := (*rmap)["code"]; b == false || v != "0" {
-		c.JSON(http.StatusOK, A_MESSAGE_CHECK_FAILED)
-		return
-	}
+	//rmap := base.MessageCheck(mobile, code)
+	//
+	//if rmap == nil {
+	//	c.JSON(http.StatusOK, A_MESSAGE_CHECK_FAILED)
+	//	return
+	//}
+	//
+	//if v, b := (*rmap)["code"]; b == false || v != "0" {
+	//	c.JSON(http.StatusOK, A_MESSAGE_CHECK_FAILED)
+	//	return
+	//}
 
 	if user.IsNull() {
 		//更新信息

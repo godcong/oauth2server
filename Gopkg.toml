@@ -5,7 +5,7 @@
 # for detailed Gopkg.toml documentation.
 #
 # required = ["github.com/user/thing/cmd/thing"]
-# ignored = ["github.com/user/project/pkgX", "bitbucket.org/user/project/pkgA/pkgY"]
+ ignored = ["golang.org/x/sys/unix","http://golang.org/x/sys/unix"]
 #
 # [[constraint]]
 #   name = "github.com/user/project"
@@ -16,8 +16,31 @@
    branch = "master"
    source = "github.com/golang/crypto"
 
+ [[override]]
+   name = "golang.org/x/crypto"
+   branch = "master"
+   source = "github.com/golang/crypto"
+
+ [[constraint]]
+   name = "golang.org/x/sys"
+   branch = "master"
+   source = "github.com/golang/sys"
+
+ [[override]]
+   name = "golang.org/x/sys"
+   branch = "master"
+   source = "github.com/golang/sys"
+# [[constraint]]
+#   name = "golang.org/x/sys/unix"
+#   branch = "master"
+#   source = "github.com/golang/sys"
+
 #
 # [[override]]
 #  name = "github.com/x/y"
 #  version = "2.4.0"
+
+[[override]]
+  name = "github.com/gin-gonic/gin"
+  version = "v1.2"
 

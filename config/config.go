@@ -2,6 +2,8 @@ package config
 
 import (
 	"flag"
+
+	"github.com/pelletier/go-toml"
 )
 
 type Config struct {
@@ -56,12 +58,32 @@ func DefaultConfig() *Config {
 	return config
 }
 
-func (c *Config) GetSub(name string) Config {
+func GetSub(name string) *Config {
+	return DefaultConfig().GetSub(name)
+}
+
+func Get(name string) interface{} {
+	return DefaultConfig().Get(name)
+}
+
+func GetString(name string) string {
+	return DefaultConfig().GetString(name)
+}
+
+func GetBool(name string) bool {
+	return DefaultConfig().GetBool(name)
+}
+
+func GetStringWithDefault(name string, def string) string {
+	return DefaultConfig().GetStringWithDefault(name, def)
+}
+
+func (c *Config) GetSub(name string) *Config {
 	var cfg Config
 	if v := c.Get(name); v != nil {
 		cfg.tree, _ = v.(*toml.Tree)
 	}
-	return cfg
+	return &cfg
 }
 
 func (c *Config) Get(name string) interface{} {

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>{{.title}}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link rel="stylesheet" href="../static/css/amaze.min.css">	
+	<link rel="stylesheet" href="../static/css/mint-ui.min.css">
+	<link rel="stylesheet" href="../static/css/login.css">
+</head>
+<body>
+	<div id="app" class="container" style="max-width:400px;margin:50px auto;">
+		<header class="title">
+	  		<div class="prev-arrow"><a class="backprev" href="javascript:history.go(-1);"></a></div>
+	    	<h1>注册</h1>
+	  	</header>
+		<form class="am-form am-form-horizontal" id="loginForm" style="margin-top:10px;" novalidate onSubmit="return false">
+		  <div class="am-form-group">
+		    <div class="am-u-sm-12">
+		      <input type="text" type="text" id="username" placeholder="用户名字母开头，字母数字下划线组成" name="username" data-validate="username2" data-describedby="username2-description" minlength="6" />
+		    </div>
+		  </div>
+		  <div class="am-form-group">
+		    <div class="am-u-sm-12">
+		      <input type="password" id="pwd2" placeholder="请设置密码" name="password" minlength="6" data-validate="password" data-describedby="password-description" />
+		    </div>
+		  </div>
+		  <div class="am-form-group">
+		    <div class="am-u-sm-12">
+		      <input type="password" id="confirmpwd2" placeholder="请再次输入密码" name="vpassword" minlength="6" data-required="true" data-descriptions="confirmpassword" data-conditional="confirmpwd2" data-describedby="confirmpassword-description" />
+		    </div>
+		  </div>
+		  {{/*<div class="am-form-group">*/}}
+		    {{/*<div class="am-u-sm-12">*/}}
+		      {{/*<input type="number" id="mobile" placeholder="请输入手机号" name="mobile" v-model="mobile" required minlength="11" maxlength="11" data-validate="mobile" data-describedby="mobile-description"/>*/}}
+		    {{/*</div>*/}}
+		  {{/*</div>*/}}
+		  {{/*<div class="am-form-group">*/}}
+		    {{/*<div class="am-u-sm-8">*/}}
+		      {{/*<input type="number" id="code" placeholder="请输入验证码" name="code" minlength="4" maxlength="4" data-validate="code" data-describedby="code-description"/>*/}}
+		    {{/*</div>*/}}
+		    {{/*<section class="am-u-sm-4 pd-left0">*/}}
+		    	{{/*<button type="button" class="am-btn am-btn-primary" v-text="codeBtn" :disabled="counting" @click="getCode"></button>*/}}
+		    {{/*</section>*/}}
+		  {{/*</div>*/}}
+		  <div class="am-form-group">
+		    <div class="am-u-sm-12">
+		      <button type="submit" class="am-btn am-btn-primary am-btn-block" style="margin-top:30px">提交</button>
+		    </div>
+		  </div>
+		  <div class="links">
+		  	<p class="link_protocol">注册代表同意<a href="/protocol" class="nodecoration colorBlue">《玛娜花园注册协议》</a></p>
+		  </div>
+		</form>
+		<div class="am-modal am-modal-alert modal" tabindex="-1" id="my-alert">
+		  <div class="am-modal-dialog">
+		    <div class="am-modal-hd" v-text="alertTitle"></div>
+		    <div class="am-modal-bd" v-text="alertMsg"></div>
+		    <div class="am-modal-footer" v-show="alertBtn">
+		      <span class="am-modal-btn">确定</span>
+		    </div>
+		  </div>
+		</div>
+	</div>
+	<script type="text/javascript" src="../static/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../static/js/vue2.min.js"></script>
+	<script type="text/javascript" src="../static/js/validateForm.min.js"></script>
+	<script type="text/javascript" src="../static/js/login.js"></script>
+	<script type="text/javascript" src="../static/js/mint-ui.min.js"></script>
+	<script type="text/javascript">
+		var app = new Vue({
+		  	el: '#app',
+		  	data: {
+		  		canSubmit:true,
+		  		alertMsg:'',
+		  		alertTitle:'注册失败',
+		  		codeBtn:'获取验证码',
+		  		alertBtn:true,
+		  		counting:false,
+		  		time:60,
+		  		mobile:''
+		  	},
+		  	mounted:function(){
+		  		var that = this;
+		  		validations();
+	  			validateFormLogin(that.formSubmit,'#loginForm')
+				/*是否获取验证码*/
+				if(!!this.getCookie('counting')&&this.getCookie('counting')!='0'){
+					this.counting = true;
+					this.time = this.getCookie('counting')
+  					var countDown = setInterval(function(){
+	  					if(that.time>0){
+	  						that.time--;
+	  						that.setCookie('counting',that.time);
+	  						that.codeBtn = that.time+'s';
+	  					}else{
+	  						that.time = 60;
+	  						that.counting = false;
+	  						that.setCookie('counting','0');
+	  						that.codeBtn = '获取验证码';
+	  						clearInterval(countDown);
+	  					}
+	  				},1000)
+				}
+		  	},
+		  	methods:{
+		  		setCookie:function(name,value){
+					var exp = new Date();
+					exp.setTime(exp.getTime() + 60*1000);
+					document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+				},
+				getCookie:function(name){
+					var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+					if(arr=document.cookie.match(reg))
+					return unescape(arr[2]);
+					else
+					return null;
+				},
+		  		countDown:function(){
+					var that = this;
+					var countDown = setInterval(function(){
+	  					if(that.time>0){
+	  						that.time--;
+	  						that.setCookie('counting',that.time);
+	  						that.codeBtn = that.time+'s';
+	  					}else{
+	  						that.time = 60;
+	  						that.counting = false;
+	  						that.setCookie('counting','0');
+	  						that.codeBtn = '获取验证码';
+	  						clearInterval(countDown);
+	  					}
+	  				},1000)
+				},
+		  		getCode:function(){
+		  			var that = this;
+		  			var legalMobile = /^1[3|4|5|6|7|8|9]\d{9}$/.test(this.mobile);
+	  				if(!this.counting&&!!legalMobile){
+	  					$.ajax({
+			  				type:'POST',
+			  				url:'/msg/send',
+			  				data:{mobile:that.mobile},
+			  				success:function(data){
+			  					if(data.Code=='0'){
+			  						that.$toast('短消息已发送');
+			  						that.counting = true;
+			  						that.countDown();
+			  					}else{
+			  						that.$messagebox({
+			  							title:'提示',
+			  							message:data.Message,
+			  							confirmButtonText:'确认'
+			  						});
+			  					}
+			  				},
+			  				error:function(){
+			  					that.$messagebox({
+		  							title:'提示',
+		  							message:'验证码获取失败',
+		  							confirmButtonText:'确认'
+		  						});
+			  				}
+			  			})
+	  				}
+		  		},
+		  		formSubmit:function(){
+		  			var that = this;
+	  				$.ajax({
+		  				type:'POST',
+		  				url:'/register',
+		  				beforeSend:function(){
+		  					that.$indicator.open('正在注册...');
+		  				},
+		  				data:$('#loginForm').serialize(),
+		  				success:function(data){
+		  					if(data.Code=='0'){
+		  						that.$toast('注册成功');
+		  						that.setCookie('counting','0');
+		  						setTimeout(function(){
+		  							location.href=data.Data.URL;
+		  						},1500)
+		  					}else{
+		  						that.$messagebox({
+		  							title:'提示',
+		  							message:data.Message,
+		  							confirmButtonText:'确认'
+		  						});
+		  					}
+		  				},
+		  				complete:function(){
+		  					that.setCookie('counting','0');
+		  					requesting = false;
+		  					that.$indicator.close();
+		  				},
+		  				error:function(){
+		  					that.setCookie('counting','0');
+		  					requesting = false;
+		  					that.$indicator.close();
+		  					that.$messagebox({
+	  							title:'提示',
+	  							message:'系统错误',
+	  							confirmButtonText:'确认'
+	  						});
+		  				}
+		  			})
+		  		}
+		  	}
+		})
+	</script>
+</body>
+</html>

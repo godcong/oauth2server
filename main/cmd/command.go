@@ -1,32 +1,27 @@
 package main
 
 import (
-	"fmt"
-
+	"encoding/json"
+	"log"
 	"os"
 	"strconv"
-
 	"time"
-
-	"log"
-
-	"net/url"
-
-	"encoding/json"
 
 	"github.com/godcong/oauth2server/base"
 	"github.com/godcong/oauth2server/model"
 	"github.com/jinzhu/gorm"
 	"github.com/satori/go.uuid"
-	"gopkg.in/configo.v2"
 )
 
 const MAX = 1000
 
 func main() {
 	args := os.Args
-	fmt.Println(os.Args[0])
+	base.Println(os.Args[0])
 	if len(args) > 1 {
+		if args[1] == "init" {
+			Init()
+		}
 		if args[1] == "help" {
 			Help()
 		}
@@ -59,39 +54,40 @@ func main() {
 
 			UserMake(uname, pass)
 		}
-		if args[1] == "trans" {
-			//1:from 2:to
-			from := "mysql2"
-			to := "mysql"
-			if len(args) > 1 {
-				from = args[2]
-			}
-			if len(args) == 3 {
-				to = args[3]
-			}
-			conF, err1 := configo.Get(from)
-
-			if err1 != nil {
-				panic(err1)
-			}
-			dbf := connectDb(conF)
-			conT, err2 := configo.Get(to)
-			if err2 != nil {
-				panic(err2)
-			}
-			dbt := connectDb(conT)
-
-			Transfer(dbf, dbt)
-		}
+		//if args[1] == "trans" {
+		//	//1:from 2:to
+		//	from := "mysql2"
+		//	to := "mysql"
+		//	if len(args) > 1 {
+		//		from = args[2]
+		//	}
+		//	if len(args) == 3 {
+		//		to = args[3]
+		//	}
+		//	conF, err1 := configo.Get(from)
+		//
+		//	if err1 != nil {
+		//		panic(err1)
+		//	}
+		//	dbf := connectDb(conF)
+		//	conT, err2 := configo.Get(to)
+		//	if err2 != nil {
+		//		panic(err2)
+		//	}
+		//	dbt := connectDb(conT)
+		//
+		//	Transfer(dbf, dbt)
+		//}
 	}
 
 }
 func Help() {
-	fmt.Println(
-		"migrate					sync the model to database\r\n" +
-		"random [num]				create user of numbers(num=10)\r\n" +
-		"client [url]				create an client with redirecturi(url='')\r\n" +
-		"user [name] [pass]			create an user with username and password(pass=123456)\r\n")
+	base.Println(
+		"init 						create database and sync the model \r\n" +
+			"migrate					sync the model to database\r\n" +
+			"random [num]				create user of numbers(num=10)\r\n" +
+			"client [url]				create an client with redirecturi(url='')\r\n" +
+			"user [name] [pass]			create an user with username and password(pass=123456)\r\n")
 }
 
 func ClientMake(url string) {
@@ -106,9 +102,9 @@ func ClientMake(url string) {
 		client.RedirectUri = string(uri)
 	}
 
-	fmt.Println(client)
+	base.Println(client)
 	db := model.Gorm().Save(client)
-	fmt.Println(db.GetErrors())
+	base.Println(db.GetErrors())
 
 }
 
@@ -119,9 +115,9 @@ func UserMake(name, pass string) {
 	user2 := new(model.User)
 	model.Gorm().First(user2, "username = ?", user.Username)
 	if user2.IsNull() == true {
-		fmt.Println(user.Username, pass)
+		base.Println(user.Username, pass)
 		db := model.Save(user)
-		fmt.Println(db.GetErrors())
+		base.Println(db.GetErrors())
 	}
 
 }
@@ -129,7 +125,7 @@ func UserMake(name, pass string) {
 func Migrate() bool {
 	m := model.GetModels()
 	for k, v := range *m {
-		fmt.Println("Migrate:", k)
+		base.Println("Migrate:", k, v)
 		model.Gorm().AutoMigrate(v)
 	}
 	return true
@@ -235,24 +231,28 @@ func tableCounts(db *gorm.DB, s string) (count int) {
 	return
 }
 
-func connectDb(config *configo.Property) *gorm.DB {
-	var e error
-	dtyp := config.MustGet("db", "mysql")
-	addr := config.MustGet("addr", "localhost")
-	port := config.MustGet("port", "3306")
-	name := config.MustGet("dbname", "gautu")
-	user := config.MustGet("user", "root")
-	pass := config.MustGet("password", "123456")
-	param := config.MustGet("param", "?")
-	loc := config.MustGet("loc", url.QueryEscape("Asia/Shanghai"))
-
-	conn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s%sloc=%s&charset=utf8&parseTime=true",
-		user, pass, addr, port, name, param, loc)
-	log.Println(conn)
-	//db.engine, e = xorm.NewEngine(db.dbtype, conn)
-	db, e := gorm.Open(dtyp, conn)
-	if e != nil {
-		panic(e)
-	}
-	return db
+func connectDb() *gorm.DB {
+	return model.NewEngine()
 }
+
+//func connectDb(config *configo.Property) *gorm.DB {
+//	var e error
+//	dtyp := config.MustGet("db", "mysql")
+//	addr := config.MustGet("addr", "localhost")
+//	port := config.MustGet("port", "3306")
+//	name := config.MustGet("dbname", "gautu")
+//	user := config.MustGet("user", "root")
+//	pass := config.MustGet("password", "123456")
+//	param := config.MustGet("param", "?")
+//	loc := config.MustGet("loc", url.QueryEscape("Asia/Shanghai"))
+//
+//	conn := base.Sprintf("%s:%s@tcp(%s:%s)/%s%sloc=%s&charset=utf8&parseTime=true",
+//		user, pass, addr, port, name, param, loc)
+//	log.Println(conn)
+//	//db.engine, e = xorm.NewEngine(db.dbtype, conn)
+//	db, e := gorm.Open(dtyp, conn)
+//	if e != nil {
+//		panic(e)
+//	}
+//	return db
+//}

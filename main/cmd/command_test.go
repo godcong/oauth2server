@@ -4,10 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	configo "gopkg.in/configo.v2"
-
 	"github.com/godcong/oauth2server/base"
-	"github.com/godcong/oauth2server/model"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -34,21 +31,22 @@ func TestClientMake(t *testing.T) {
 	fmt.Println(string(str3))
 }
 
-func TestTransfer(t *testing.T) {
-	model.CFlag = false
-	config := configo.NewConfig(`D:\Godcong\Workspace\g7n3\src\g7n3.com\hamster\gautu\config.env`)
-	config.Load()
-	f, err1 := config.Get("mysql2")
-
-	if err1 != nil {
-		panic(err1)
-	}
-	dfrom := connectDb(f)
-	to, err2 := config.Get("mysql")
-	if err2 != nil {
-		panic(err2)
-	}
-	dto := connectDb(to)
-	Transfer(dfrom, dto)
-
-}
+//
+//func TestTransfer(t *testing.T) {
+//	model.CFlag = false
+//	config := configo.NewConfig(`D:\Godcong\Workspace\g7n3\src\g7n3.com\hamster\gautu\config.env`)
+//	config.Load()
+//	f, err1 := config.Get("mysql2")
+//
+//	if err1 != nil {
+//		panic(err1)
+//	}
+//	dfrom := connectDb(f)
+//	to, err2 := config.Get("mysql")
+//	if err2 != nil {
+//		panic(err2)
+//	}
+//	dto := connectDb(to)
+//	Transfer(dfrom, dto)
+//
+//}

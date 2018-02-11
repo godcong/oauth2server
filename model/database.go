@@ -1,13 +1,10 @@
 package model
 
 import (
-	"database/sql"
 	"fmt"
 	"net/url"
 
-	"gopkg.in/configo.v2"
-
-	"log"
+	"github.com/godcong/oauth2server/config"
 
 	"github.com/jinzhu/gorm"
 )
@@ -32,8 +29,8 @@ type DatabaseConfiguration struct {
 }
 
 var (
-	config *DatabaseConfiguration
-	db     *gorm.DB
+	defaultConfig *DatabaseConfiguration
+	db            *gorm.DB
 )
 
 var defaultConfigure = &DatabaseConfiguration{
@@ -53,59 +50,34 @@ var defaultConfigure = &DatabaseConfiguration{
 }
 
 func init() {
-	var e error
-	config = defaultConfigure
-	if m, e := configo.Get(defaultConfigure.Type); e == nil {
-		config = &DatabaseConfiguration{
-			Database: Database{
-				Type:    m.MustGet("db", defaultConfigure.Type),
-				Address: m.MustGet("addr", defaultConfigure.Address),
-				Port:    m.MustGet("port", defaultConfigure.Port),
-				Name:    m.MustGet("dbname", defaultConfigure.Name),
-			},
-			DatabaseLoginInfo: DatabaseLoginInfo{
-				User:     m.MustGet("user", defaultConfigure.User),
-				Password: m.MustGet("password", defaultConfigure.Password),
-			},
-			param: m.MustGet("param", defaultConfigure.param),
-			loc:   m.MustGet("loc", defaultConfigure.loc),
-		}
+	//var e error
+	//defaultConfig = defaultConfigure
+	//if m, e := configo.Get(defaultConfigure.Type); e == nil {
+	//	defaultConfig = &DatabaseConfiguration{
+	//		Database: Database{
+	//			Type:    m.MustGet("db", defaultConfigure.Type),
+	//			Address: m.MustGet("addr", defaultConfigure.Address),
+	//			Port:    m.MustGet("port", defaultConfigure.Port),
+	//			Name:    m.MustGet("dbname", defaultConfigure.Name),
+	//		},
+	//		DatabaseLoginInfo: DatabaseLoginInfo{
+	//			User:     m.MustGet("user", defaultConfigure.User),
+	//			Password: m.MustGet("password", defaultConfigure.Password),
+	//		},
+	//		param: m.MustGet("param", defaultConfigure.param),
+	//		loc:   m.MustGet("loc", defaultConfigure.loc),
+	//	}
+	//
+	//}
+	//c := config.DefaultConfig()
 
-	}
-
-	conn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s%sloc=%s&charset=utf8&parseTime=true",
-		config.User, config.Password, config.Address, config.Port, config.Name, config.param, config.loc)
-	log.Println(conn)
-	//db.engine, e = xorm.NewEngine(db.dbtype, conn)
-	db, e = gorm.Open(config.Type, conn)
-	if e != nil {
-		panic(e)
-	}
-
+	//conn := connectMysql(c)
+	//base.Println(conn)
+	//db = NewEngine()
 }
 
-func CreateDatabase() {
-
-	db, err := sql.Open("mysql", "admin:admin@tcp(127.0.0.1:3306)/")
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
-
-	_, err = db.Exec("CREATE DATABASE " + name)
-	if err != nil {
-		panic(err)
-	}
-
-	_, err = db.Exec("USE " + name)
-	if err != nil {
-		panic(err)
-	}
-
-	_, err = db.Exec("CREATE TABLE example ( id integer, data varchar(32) )")
-	if err != nil {
-		panic(err)
-	}
+func DatabaseType(config *config.Config) string {
+	return config.GetSub("database").GetStringWithDefault("name", "mysql")
 }
 
 func OnExit() {
@@ -113,13 +85,11 @@ func OnExit() {
 }
 
 func NewEngine() *gorm.DB {
-
 	var e error
-	conn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s%sloc=%s&charset=utf8&parseTime=true",
-		config.User, config.Password, config.Address, config.Port, config.Name, config.param, config.loc)
+	c := config.DefaultConfig()
+	conn := ConnectMysql(c)
 
-	//db.engine, e = xorm.NewEngine(db.dbtype, conn)
-	db, e = gorm.Open(config.Type, conn)
+	db, e = gorm.Open(DatabaseType(c), conn)
 	if e != nil {
 		panic(e)
 	}
@@ -127,8 +97,16 @@ func NewEngine() *gorm.DB {
 
 }
 
-func connectSql() {
-
+func ConnectMysql(config *config.Config) string {
+	db := config.GetSub("database")
+	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s%sloc=%s&charset=utf8&parseTime=true",
+		db.GetStringWithDefault("username", "root"),
+		db.GetStringWithDefault("password", "123456"),
+		db.GetStringWithDefault("addr", "localhost"),
+		db.GetStringWithDefault("port", "3306"),
+		db.GetStringWithDefault("schema", "oauth2"),
+		db.GetStringWithDefault("param", "?"),
+		url.QueryEscape(db.GetStringWithDefault("local", "Asia/Shanghai")))
 }
 
 func FirstById(v interface{}, id string) {

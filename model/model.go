@@ -1,9 +1,8 @@
 package model
 
 import (
-	"time"
-
 	"log"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
@@ -37,6 +36,10 @@ func (b *BaseModel) BeforeCreate(scope *gorm.Scope) error {
 }
 
 func Gorm() *gorm.DB {
+	if db == nil {
+		db = NewEngine()
+	}
+
 	return db
 }
 

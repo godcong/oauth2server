@@ -1,19 +1,17 @@
 package oauth2server
 
 import (
-	"fmt"
 	"log"
 	"strings"
 
 	"github.com/garyburd/redigo/redis"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/godcong/oauth2server/base"
+	"github.com/godcong/oauth2server/config"
 	"github.com/godcong/oauth2server/model"
 	"github.com/jinzhu/gorm"
 
 	"github.com/garyburd/redigo/redisx"
-	"gopkg.in/configo.v2"
 )
 
 type Oauth2Server struct {
@@ -59,15 +57,12 @@ func NewRedis() *redisx.ConnMux {
 		DB:       "1",
 		User:     "x",
 	}
-
-	if pro, err := configo.Get("redis"); err == nil {
-		fmt.Println(pro)
-		dr.Address = pro.MustGet("addr", "localhost")
-		dr.Port = pro.MustGet("port", "6379")
-		dr.Password = pro.MustGet("password", "")
-		dr.DB = pro.MustGet("db", "1")
-		dr.User = pro.MustGet("user", "x")
-	}
+	rds := config.GetSub("redis")
+	dr.Address = rds.GetStringWithDefault("addr", "localhost")
+	dr.Port = rds.GetStringWithDefault("port", "6379")
+	dr.Password = rds.GetStringWithDefault("password", "")
+	dr.DB = rds.GetStringWithDefault("db", "1")
+	dr.User = rds.GetStringWithDefault("user", "")
 
 	//addr := strings.Join([]string{dr.Address, dr.Port}, ":")
 
@@ -150,14 +145,12 @@ func NewRedisStore() *sessions.RedisStore {
 		User:     "x",
 	}
 
-	if pro, err := configo.Get("redis"); err == nil {
-		base.Println(pro)
-		dr.Address = pro.MustGet("addr", "localhost")
-		dr.Port = pro.MustGet("port", "6379")
-		dr.Password = pro.MustGet("password", "")
-		dr.DB = pro.MustGet("db", "1")
-		dr.User = pro.MustGet("user", "x")
-	}
+	rds := config.GetSub("redis")
+	dr.Address = rds.GetStringWithDefault("addr", "localhost")
+	dr.Port = rds.GetStringWithDefault("port", "6379")
+	dr.Password = rds.GetStringWithDefault("password", "")
+	dr.DB = rds.GetStringWithDefault("db", "1")
+	dr.User = rds.GetStringWithDefault("user", "")
 
 	addr := strings.Join([]string{dr.Address, dr.Port}, ":")
 	store, _ := sessions.NewRedisStoreWithDB(10, "tcp", addr, dr.Password, dr.DB, []byte("secret"))
@@ -175,14 +168,12 @@ func Start() {
 }
 
 func serverAddr() (r string) {
-	server, err := configo.Get("server")
-	if err != nil {
-		r = ":7777"
-		return
-	}
+	addr := config.GetSub("system").GetStringWithDefault("port", "localhost")
+	port := config.GetSub("system").GetStringWithDefault("port", "7890")
+
 	r = strings.Join([]string{
-		server.MustGet("addr", ""),
-		server.MustGet("port", "7777"),
+		addr,
+		port,
 	},
 		":")
 	return

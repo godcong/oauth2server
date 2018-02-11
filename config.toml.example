@@ -1,0 +1,20 @@
+[database]
+   name = "mysql"
+   username = "root"
+   password = "123456"
+   addr = "localhost"
+   port = "3306"
+   schema = "oauth2"
+   local = "Asia/Shanghai"
+   param = "?"
+
+[redis]
+#user=root
+#password=123456
+port=6379
+#addr=localhost
+#db=8
+
+[system]
+#addr = "localhost"
+port = 7890

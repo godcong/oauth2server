@@ -13,7 +13,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/godcong/oauth2server/base"
 	"github.com/godcong/oauth2server/model"
-	"github.com/godcong/oauth2server/msg"
 )
 
 var (
@@ -28,9 +27,6 @@ func tokenGet(context *gin.Context) {
 		"error": "Request must be POST",
 	})
 }
-
-//func tokenPost(c *gin.Context) {
-//>>>>>>> 61ccd1cfb55d69afe946a99abd5151b5ce3cad0b
 
 func tokenPost(c *gin.Context) {
 	fmt.Println("tokenPost")
@@ -47,7 +43,6 @@ func tokenPost(c *gin.Context) {
 
 	}
 	if e := AccessCheck(c); e != nil {
-
 		log.Println("err2", e.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": e.Error(),
@@ -56,9 +51,9 @@ func tokenPost(c *gin.Context) {
 	}
 
 	form := c.Request.Form
-	grant_type := form.Get("grant_type")
+	grantType := form.Get("grant_type")
 
-	switch grant_type {
+	switch grantType {
 	case AuthorizationCodeGrant:
 		Token(c)
 	case PasswordCredentialsGrant:
@@ -66,7 +61,7 @@ func tokenPost(c *gin.Context) {
 	case RefreshToken:
 		GetRefreshToken(c)
 	default:
-		msg.Info("err3")
+		base.Println("err3")
 
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": ERROR_MAP[E_INVALID_GRANT],
@@ -84,9 +79,9 @@ func Token(c *gin.Context) {
 
 	form := c.Request.Form
 	code := form.Get("code")
-	redirect_uri := form.Get("redirect_uri")
+	redirectUri := form.Get("redirect_uri")
 
-	if code == "" || redirect_uri == "" {
+	if code == "" || redirectUri == "" {
 		log.Println("err3")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": ERROR_MAP[E_INVALID_REQUEST],
@@ -125,7 +120,7 @@ func Token(c *gin.Context) {
 		return
 	}
 
-	acc, ref := GetAccessTokenAndRefreshToekn(client, &user)
+	acc, ref := GetAccessTokenAndRefreshToken(client, &user)
 
 	c.JSON(http.StatusOK, gin.H{
 		"access_token":  acc,
@@ -144,10 +139,10 @@ func GetRefreshToken(c *gin.Context) {
 	}
 
 	form := c.Request.Form
-	client_id := form.Get("client_id")
-	refresh_token := form.Get("refresh_token")
+	clientId := form.Get("client_id")
+	refreshToken := form.Get("refresh_token")
 
-	if refresh_token == "" {
+	if refreshToken == "" {
 		log.Println("err3")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": ERROR_MAP[E_INVALID_REQUEST],
@@ -157,9 +152,9 @@ func GetRefreshToken(c *gin.Context) {
 
 	authorize := new(model.Authorize)
 
-	model.Gorm().First(authorize, "refresh_token = ?", refresh_token)
+	model.Gorm().First(authorize, "refresh_token = ?", refreshToken)
 
-	acc, ref := AccessGenerateToken(client_id, authorize.UserID.String(), time.Nanosecond.Nanoseconds(), true)
+	acc, ref := AccessGenerateToken(clientId, authorize.UserID.String(), time.Nanosecond.Nanoseconds(), true)
 
 	authorize.AccessToken = acc
 	authorize.RefreshToken = ref
@@ -182,12 +177,12 @@ func PasswordToken(c *gin.Context) {
 	}
 
 	form := c.Request.Form
-	client_id := form.Get("client_id")
+	clientId := form.Get("client_id")
 	username := form.Get("username")
-	passwd := form.Get("password")
+	pass := form.Get("password")
 
-	if username == "" || passwd == "" {
-		msg.Info("err")
+	if username == "" || pass == "" {
+		base.Println("err")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": ERROR_MAP[E_INVALID_REQUEST],
 		})
@@ -195,13 +190,13 @@ func PasswordToken(c *gin.Context) {
 	}
 
 	if scope := form.Get("scope"); scope != "" {
-		GetRedis().Do("SET", client_id, scope)
+		GetRedis().Do("SET", clientId, scope)
 	}
 
 	user := new(model.User)
 	model.Gorm().First(user, "username = ?", username)
 
-	if user.Password != passwd {
+	if user.Password != pass {
 		fmt.Println("username or passwortd is wrong!!")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": ERROR_MAP[E_INVALID_REQUEST],
@@ -210,15 +205,15 @@ func PasswordToken(c *gin.Context) {
 	}
 
 	client := new(model.Client)
-	model.Gorm().First(client, "client_user = ?", client_id)
+	model.Gorm().First(client, "client_user = ?", clientId)
 	if client.IsNull() {
-		msg.Info("client is null")
+		base.Println("client is null")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": ERROR_MAP[E_INVALID_REQUEST],
 		})
 		return
 	}
-	acc, ref := GetAccessTokenAndRefreshToekn(client, user)
+	acc, ref := GetAccessTokenAndRefreshToken(client, user)
 
 	c.JSON(http.StatusOK, gin.H{
 		"access_token":  acc,
@@ -237,7 +232,7 @@ grant_type	Required. Must be set to authorization_code .
 code	Required. The authorization code received by the authorization server.
 redirect_uri	Required, if the request URI was included in the authorization request. Must be identical then.
 */
-func GetAccessTokenAndRefreshToekn(client *model.Client, user *model.User) (acc, ref string) {
+func GetAccessTokenAndRefreshToken(client *model.Client, user *model.User) (acc, ref string) {
 
 	author := new(model.Authorize)
 	oid := model.GenerateOpenID(client.ID.String(), user.ID.String())
@@ -248,7 +243,7 @@ func GetAccessTokenAndRefreshToekn(client *model.Client, user *model.User) (acc,
 
 	acc, ref = AccessGenerateToken(client.ClientUser, user.ID.String(), time.Nanosecond.Nanoseconds(), true)
 
-	if exts, author2 := CreateIfNotExist(author); exts {
+	if ext, author2 := CreateIfNotExist(author); ext {
 		author.RefreshToken = ref
 		author.AccessToken = acc
 		_ = author2
@@ -264,13 +259,13 @@ func AccessCheck(c *gin.Context) error {
 		c.Request.ParseForm()
 	}
 
-	client_id := c.Request.Form.Get("client_id")
-	client_secret := c.Request.Form.Get("client_secret")
-	grant_type := c.Request.Form.Get("grant_type")
+	clientId := c.Request.Form.Get("client_id")
+	clientSecret := c.Request.Form.Get("client_secret")
+	grantType := c.Request.Form.Get("grant_type")
 	//	code := c.Request.Form.Get("code")
 	//	redirect_uri := c.Request.Form.Get("redirect_uri")
 
-	if client_id == "" || client_secret == "" || grant_type == "" {
+	if clientId == "" || clientSecret == "" || grantType == "" {
 		log.Println("missed", c.Request.Form)
 		return ERROR_MAP[E_INVALID_REQUEST]
 	}
@@ -281,19 +276,19 @@ func AccessCheck(c *gin.Context) error {
 	}
 
 	client := new(model.Client)
-	model.Gorm().First(client, "client_user = ?", client_id)
+	model.Gorm().First(client, "client_user = ?", clientId)
 
 	if client.IsNull() {
 		log.Println("client is null")
 		return ERROR_MAP[E_INVALID_CLIENT]
 	}
 
-	if client.GetSecret() != client_secret {
+	if client.GetSecret() != clientSecret {
 		log.Println("client secret is wrong!")
 		return ERROR_MAP[E_INVALID_CLIENT]
 	}
 
-	if grant_type == "authorization_code" {
+	if grantType == "authorization_code" {
 		flag := client.CheckRedirectUri(c.Request.Form.Get("redirect_uri"))
 		if !flag {
 			log.Println("RedirectUri is wrong！")

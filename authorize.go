@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"log"
+	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
@@ -11,14 +12,10 @@ import (
 
 	"github.com/godcong/oauth2server/model"
 
-	"net/http"
-
 	"github.com/godcong/oauth2server/base"
 
-	"github.com/godcong/oauth2server/msg"
-
 	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
+	"github.com/satori/go.uuid"
 )
 
 const TOKEN_PREFIX = "TK_"
@@ -70,7 +67,6 @@ func FinishAuthorize(c *gin.Context, u interface{}) (code string, e error) {
 		client := new(model.Client)
 		model.Gorm().First(client, "client_user = ?", cli)
 		if client.IsNull() {
-			msg.Info("client is null")
 			return
 		}
 
@@ -108,10 +104,10 @@ func CheckClientValidator(form url.Values) int {
 	client := new(model.Client)
 
 	id := form.Get("client_id")
-	redirect_uri := form.Get("redirect_uri")
+	redirectUri := form.Get("redirectUri")
 	log.Println("CheckClientValidator client_id: ", id)
-	log.Println("CheckClientValidator redirect_uri: ", redirect_uri)
-	if redirect_uri == "" {
+	log.Println("CheckClientValidator redirectUri: ", redirectUri)
+	if redirectUri == "" {
 		return E_UNAUTHORIZED_CLIENT
 	}
 
@@ -121,16 +117,16 @@ func CheckClientValidator(form url.Values) int {
 		return E_UNAUTHORIZED_CLIENT
 	}
 
-	flag := client.CheckRedirectUri(redirect_uri)
+	flag := client.CheckRedirectUri(redirectUri)
 
-	//	if client.RedirectUri == redirect_uri || client.RedirectUri == url.QueryEscape(redirect_uri) {
-	if flag || client.RedirectUri == url.QueryEscape(redirect_uri) {
+	//	if client.RedirectUri == redirectUri || client.RedirectUri == url.QueryEscape(redirectUri) {
+	if flag || client.RedirectUri == url.QueryEscape(redirectUri) {
 		log.Println("RedirectUri success")
 		return E_INVALID_NONE
 	}
 
 	log.Println("first", client.RedirectUri)
-	log.Println("second", redirect_uri)
+	log.Println("second", redirectUri)
 	log.Println("no catched")
 	return E_UNAUTHORIZED_CLIENT
 
@@ -200,7 +196,7 @@ func authorizeGet(c *gin.Context) {
 	cli := getClient(c)
 
 	if base.JsonDecode(j, user) == nil {
-		c.HTML(http.StatusOK, "authorize.tmpl", gin.H{"title": GetTitleFromClient(cli), "user": *user, "client": *cli})
+		c.HTML(http.StatusOK, "authorize.html", gin.H{"title": GetTitleFromClient(cli), "user": *user, "client": *cli})
 		return
 	}
 	log.Println("default to sign")

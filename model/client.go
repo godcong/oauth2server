@@ -33,8 +33,8 @@ type Client struct {
 
 //noinspection GoSnakeCaseUsage
 const (
-	C_PREFIX_APPLICATION = "mna_"
-	C_PREFIX_WEB         = "mnw_"
+	C_PREFIX_APPLICATION = "app_"
+	C_PREFIX_WEB         = "web_"
 )
 
 func init() {

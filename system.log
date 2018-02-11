@@ -1,0 +1,62 @@
+2018/02/11 22:33:04 log.go:33: log start
+2018/02/11 22:33:04 messager.go:244: property not found
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] GET    /static/*filepath         --> github.com/godcong/oauth2server/vendor/github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] HEAD   /static/*filepath         --> github.com/godcong/oauth2server/vendor/github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (4 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] GET    /favicon.ico              --> github.com/godcong/oauth2server/vendor/github.com/gin-gonic/gin.(*RouterGroup).StaticFile.func1 (4 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] HEAD   /favicon.ico              --> github.com/godcong/oauth2server/vendor/github.com/gin-gonic/gin.(*RouterGroup).StaticFile.func1 (4 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] Loaded HTML Templates (10): 
+	- login.html
+	- protocol.html
+	- register.html
+	- 
+	- change.html
+	- forget.html
+	- home.html
+	- reset.html
+	- authorize.html
+	- completeuserinfo.html
+
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] GET    /                         --> github.com/godcong/oauth2server.router.func1 (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] POST   /                         --> github.com/godcong/oauth2server.router.func1 (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] PUT    /                         --> github.com/godcong/oauth2server.router.func1 (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] PATCH  /                         --> github.com/godcong/oauth2server.router.func1 (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] HEAD   /                         --> github.com/godcong/oauth2server.router.func1 (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] OPTIONS /                         --> github.com/godcong/oauth2server.router.func1 (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] DELETE /                         --> github.com/godcong/oauth2server.router.func1 (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] CONNECT /                         --> github.com/godcong/oauth2server.router.func1 (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] TRACE  /                         --> github.com/godcong/oauth2server.router.func1 (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] GET    /login                    --> github.com/godcong/oauth2server.loginGet (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] POST   /login                    --> github.com/godcong/oauth2server.loginPost (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] GET    /register                 --> github.com/godcong/oauth2server.registerGet (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] POST   /register                 --> github.com/godcong/oauth2server.registerPost (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] GET    /forget                   --> github.com/godcong/oauth2server.forgetGet (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] POST   /forget                   --> github.com/godcong/oauth2server.forgetPost (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] GET    /reset                    --> github.com/godcong/oauth2server.resetGet (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] GET    /completeuserinfo         --> github.com/godcong/oauth2server.completeUserInfoGet (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] POST   /completeuserinfo         --> github.com/godcong/oauth2server.completeUserInfoPost (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] GET    /protocol                 --> github.com/godcong/oauth2server.router.func2 (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] GET    /token                    --> github.com/godcong/oauth2server.tokenGet (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] POST   /token                    --> github.com/godcong/oauth2server.tokenPost (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] GET    /userinfo                 --> github.com/godcong/oauth2server.userinfoGet (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] POST   /msg/send                 --> github.com/godcong/oauth2server.registerPhoneSend (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] POST   /msg/check                --> github.com/godcong/oauth2server.registerPhoneCheck (5 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] GET    /logout                   --> github.com/godcong/oauth2server.logout (6 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] GET    /authorize                --> github.com/godcong/oauth2server.authorizeGet (6 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] POST   /authorize                --> github.com/godcong/oauth2server.authorizePost (6 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] GET    /change                   --> github.com/godcong/oauth2server.changeGet (6 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] POST   /change                   --> github.com/godcong/oauth2server.changePost (6 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] GET    /home                     --> github.com/godcong/oauth2server.home (6 handlers)
+2018/02/11 22:33:04 debug.go:45: [GIN-debug] Listening and serving HTTP on localhost:7890
+2018/02/11 22:33:12 log.go:49: [VisitLog URL:  ]
+2018/02/11 22:33:12 middleware.go:11: SignCheck
+2018/02/11 22:33:15 log.go:49: [VisitLog URL:  ]
+2018/02/11 22:33:15 log.go:49: [VisitLog URL:  ]
+2018/02/11 22:33:15 sign.go:51: reg: /register
+2018/02/11 22:33:15 sign.go:52: forg: /forget
+2018/02/11 22:36:01 log.go:49: [VisitLog URL:  ]
+2018/02/11 22:36:01 sign.go:51: reg: /register
+2018/02/11 22:36:01 sign.go:52: forg: /forget

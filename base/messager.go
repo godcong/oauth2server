@@ -12,12 +12,11 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"strings"
-
 	"strconv"
+	"strings"
 	"time"
 
-	"gopkg.in/configo.v2"
+	"github.com/godcong/oauth2server/config"
 )
 
 type AesEncrypt struct {
@@ -220,12 +219,9 @@ func ListToString(list *list.List, con string) string {
 }
 
 func LoadUrl(messageType MessageType) string {
-	sms, e := configo.Get("sms")
-	if e != nil {
-		return "http://localhost:8006" + messageType.StringUri()
-	}
-	addr := sms.MustGet("addr", "localhost")
-	port := sms.MustGet("port", "8006")
+	sms := config.GetSub("sms")
+	addr := sms.GetStringWithDefault("addr", "localhost")
+	port := sms.GetStringWithDefault("port", "8006")
 
 	return "http://" + strings.Join([]string{addr, port}, ":") + messageType.StringUri()
 }
@@ -239,14 +235,11 @@ type ConfigSMS struct {
 var configsms = ConfigSMS{}
 
 func InitConfig() error {
-	conf, e := configo.Get("configsms")
-	if e != nil {
-		log.Println(e.Error())
-		return e
-	}
-	configsms.AppId = conf.MustGet("app_id", "5f9c2d45f20b789e")
-	configsms.Iv = conf.MustGet("iv", "aaC5p6c5L2g6KeJ5")
-	configsms.Key = conf.MustGet("key", "sdf234wef34efrfT")
+	sms := config.GetSub("sms")
+
+	configsms.AppId = sms.GetStringWithDefault("app_id", "5f9c2d45f20b789e")
+	configsms.Iv = sms.GetStringWithDefault("iv", "aaC5p6c5L2g6KeJ5")
+	configsms.Key = sms.GetStringWithDefault("key", "sdf234wef34efrfT")
 	return nil
 }
 
