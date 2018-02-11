@@ -1,0 +1,232 @@
+html,body{
+	font-size:16px;
+}
+.none{
+	display:none;
+}
+*[v-cloak]{
+	display:none;
+}
+.fz20{
+	font-size:1.2rem;
+}
+.links{
+	margin-top:-20px;
+}
+.link_left{
+	float:left;
+	margin-left:20px;
+}
+.link_right{
+	float:right;
+	margin-right:20px;
+}
+.pd-left0{
+	padding-left:0;
+}
+.logo1 {
+    margin-bottom: 40px;
+    padding-top: 40px;
+    text-align: center;
+}
+.logo1 img {
+    width: 90px;
+    margin: 0 auto;
+}
+label{
+	font-size:0.9rem;
+	padding-right:0!important;
+}
+input{
+	font-size:0.9rem!important;
+	border:0!important;
+	outline:none!important;
+	border-bottom:1px solid #eee!important;
+	height:44px;
+	line-height:44px;
+}
+.link_protocol{
+	text-align: left;
+    font-size: .75rem;
+    color: #999;
+    padding:0 1.5rem;
+    margin-top:-10px;
+}
+.link_protocol a{
+	color: #1e94ff;
+}
+.am-btn,.am-form-group .am-alert,.am-modal-btn{
+	font-size:0.9rem;
+}
+.am-btn{
+	padding:.8em 10px;
+}
+.am-modal-hd{
+	font-size:1.4rem;
+}
+.tabs{
+	width:100%;
+	height:40px;
+	line-height:40px;
+	border-bottom:1px solid #eee;
+}
+.tab-nav{
+	width:50%;
+	box-sizing: border-box;
+	color:#999;
+	font-size:14px;
+	text-align:center;
+	float:left;
+}
+.tab-active{
+	color:#333;
+}
+.tab-left{
+	border-right:1px solid #eee;
+}
+header.title {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    font-size: 16px;
+    background: #fff;
+    text-align: center;
+    z-index: 999;
+    box-sizing: border-box;
+    color: #fff;
+    display: flex;
+    line-height: 1;
+    padding: 0 10px;
+    white-space: nowrap;
+}
+.prev-arrow{
+	-webkit-box-flex: .5;
+    -ms-flex: .5;
+    flex: .5;
+    text-align: left;
+}
+.prev-arrow a{
+	left: 0;
+    width: 30px;
+    height: 50px;
+    background: url(../img/prev.png) no-repeat center left 15px;
+    background-size: 10px auto;
+    z-index: 999;
+    position: absolute;
+    top: 0;
+    outline:none;
+}
+header h1{
+	left: 0;
+    width: 100%;
+    color: #333;
+    font-size: 1em;
+    line-height: 50px;
+    font-weight: 400;
+    position: absolute;
+    top: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    margin:0;
+}
+.regist-protocol {
+  line-height: 1.6;
+  padding: 15px 0;
+  background: #fff;
+}
+.regist-protocol h5{
+	padding: 0 15px;
+	font-size: 1rem;
+    color: $blue;
+    padding-top: 10px;
+}
+.regist-protocol p{
+	padding: 0 15px;
+}
+
+//验证弹窗
+.field-invalid{
+    border-color:#a94442;
+}
+.field-invalidmsg{
+    color:#a94442;
+}
+.field-validmsg{
+    color:#3c763d;
+}
+.field-tooltipWrap{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 19891014;
+}
+.field-tooltipInner{
+    pointer-events: none;
+    display: table;
+    position:fixed;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+}
+.field-tooltip{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+.field-tooltip .field-invalidmsg,
+.field-tooltip .field-validmsg{
+    color: #fff;
+}
+.field-tooltip .zvalid-resultformat{
+    display: inline-block;
+    position: relative;
+    background-color:rgba(0,0,0,0.8);
+    color: #fff;
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 6px;
+    box-shadow: 0 0 8px rgba(0,0,0,.1);
+    pointer-events: auto;
+    animation-name:fieldTipBounceIn;
+    -webkit-animation-name:fieldTipBounceIn;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-duration: .18s;
+    animation-duration: .18s;
+}
+
+@-webkit-keyframes fieldTipBounceIn{
+
+  0% {
+    opacity: 0;
+    -webkit-transform: scale3d(.3, .3, .3);
+    transform: scale3d(.3, .3, .3);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+
+@keyframes fieldTipBounceIn{
+  0% {
+    opacity: 0;
+    -webkit-transform: scale3d(.3, .3, .3);
+    transform: scale3d(.3, .3, .3);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+}

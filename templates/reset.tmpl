@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>{{.title}}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link rel="stylesheet" href="../static/css/amaze.min.css">
+	<link rel="stylesheet" href="../static/css/mint-ui.min.css">
+	<link rel="stylesheet" href="../static/css/login.css">
+</head>
+<body>
+	<div id="app" class="container" style="max-width:400px;margin:50px auto;">
+		<header class="title">
+	  		<div class="prev-arrow"><a class="backprev" href="javascript:history.go(-1);"></a></div>
+	    	<h1>重置密码</h1>
+	  	</header>
+	  	<p class="logo1">
+	      <img src="../static/img/logo.png" alt="">
+	    </p>
+		<form class="am-form am-form-horizontal" id="resetForm" style="margin-top:10px;" novalidate onSubmit="return false">
+			<input type="hidden" name="type" value="reset" />
+			<div class="am-form-group">
+			    <div class="am-u-sm-12">
+			      <input type="password" id="pwd2" placeholder="请设置密码" name="password" minlength="6" data-validate="password" data-describedby="password-description" />
+			    </div>
+			</div>
+		  	<div class="am-form-group">
+			    <div class="am-u-sm-12">
+			      <input type="password" id="confirmpwd2" placeholder="请再次输入密码" name="vpassword" minlength="6" data-required="true" data-descriptions="confirmpassword" data-conditional="confirmpwd2" data-describedby="confirmpassword-description" />
+			    </div>
+		  	</div>
+		  	<div class="am-form-group">
+			    <div class="am-u-sm-12">
+			      <button type="submit" class="am-btn am-btn-primary am-btn-block" style="margin-top:30px">提交</button>
+			    </div>
+		  	</div>
+		</form>
+	</div>
+	<script type="text/javascript" src="../static/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../static/js/vue2.min.js"></script>
+	<script type="text/javascript" src="../static/js/validateForm.min.js"></script>
+	<script type="text/javascript" src="../static/js/login.js"></script>
+	<script type="text/javascript" src="../static/js/mint-ui.min.js"></script>
+	<script type="text/javascript">
+		var app = new Vue({
+		  	el: '#app',
+		  	data: {
+		  		canSubmit:true,
+		  		alertMsg:'',
+		  		alertTitle:'重置失败',
+		  		codeBtn:'获取验证码',
+		  		alertBtn:true,
+		  		counting:false,
+		  		time:60
+		  	},
+		  	mounted:function(){
+		  		var that = this;
+		  		validations();
+	  			validateFormLogin(that.formSubmit,'#resetForm');
+		  	},
+		  	methods:{
+		  		formSubmit:function(){
+		  			var that = this;
+	  				$.ajax({
+		  				type:'POST',
+		  				url:'/forget',
+		  				beforeSend:function(){
+		  					that.$indicator.open('正在提交...');
+		  				},
+		  				data:$('#resetForm').serialize(),
+		  				success:function(data){
+		  					that.canSubmit = true;
+		  					if(data.Code=='0'){//验证成功，可以重置密码
+		  						that.$toast('密码设置成功');
+		  						setTimeout(function(){
+		  							location.href='/login';
+		  						},1500)
+		  					}else{
+		  						that.$messagebox({
+		  							title:'提示',
+		  							message:data.Message,
+		  							confirmButtonText:'确认'
+		  						});
+		  					}
+		  				},
+		  				complete:function(){
+		  					requesting = false;
+		  					that.$indicator.close();
+		  				},
+		  				error:function(){
+		  					requesting = false;
+		  					that.$indicator.close();
+		  					that.$messagebox({
+	  							title:'提示',
+	  							message:'系统错误',
+	  							confirmButtonText:'确认'
+	  						});
+		  				}
+		  			})
+		  		}
+		  	}
+		})
+	</script>
+</body>
+</html>

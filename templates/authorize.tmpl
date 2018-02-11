@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>{{.title}}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link rel="stylesheet" href="../static/css/amaze.min.css">
+	<link rel="stylesheet" href="../static/css/login.css">
+</head>
+<body>
+	<div class="container">
+		<div class="auth-con" style="margin-top:80px;">
+			<header class="title">
+		    	<h1>授权</h1>
+		  	</header>
+			<form class="am-form am-form-horizontal" id="authForm" style="margin-top:10px;" novalidate onSubmit="return false">
+			  <div class="am-form-group">
+			    <div class="am-u-sm-12">
+			      	<h4 class="text-center">用户名：{{.user.Nickname}}</h4>
+			    </div>
+			  </div>
+			  <div class="am-form-group">
+			    <div class="am-u-sm-12">
+                	<h4 class="text-center">客户端名：{{.client.ClientName}}</h4>
+			    </div>
+			  </div>
+			  <div class="am-form-group">
+			    <div class="am-u-sm-12">
+			      <button type="submit" class="am-btn am-btn-primary am-btn-block" style="margin-top:30px">确认</button>
+			    </div>
+			  </div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
