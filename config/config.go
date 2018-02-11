@@ -2,6 +2,7 @@ package config
 
 import (
 	"flag"
+	"log"
 
 	"github.com/pelletier/go-toml"
 )
@@ -23,6 +24,7 @@ func init() {
 	flags["l"] = *l
 	flags["c"] = *c
 	flags["d"] = *d
+	log.Println("flags: ", flags)
 }
 
 func GetFlag(name string) interface{} {
@@ -48,7 +50,11 @@ func GetFlagBool(name string) bool {
 
 func loadConfig() {
 	config = new(Config)
-	config.tree, _ = toml.LoadFile(GetFlagString("c"))
+	var err error
+	config.tree, err = toml.LoadFile(GetFlagString("c"))
+	if err != nil {
+		config.tree, err = toml.LoadFile("config.toml")
+	}
 }
 
 func DefaultConfig() *Config {

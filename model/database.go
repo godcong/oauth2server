@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"log"
 	"net/url"
 
 	"github.com/godcong/oauth2server/config"
@@ -76,7 +77,7 @@ func init() {
 	//db = NewEngine()
 }
 
-func DatabaseType(config *config.Config) string {
+func DatabaseType() string {
 	return config.GetSub("database").GetStringWithDefault("name", "mysql")
 }
 
@@ -86,19 +87,20 @@ func OnExit() {
 
 func NewEngine() *gorm.DB {
 	var e error
-	c := config.DefaultConfig()
-	conn := ConnectMysql(c)
+	conn := ConnectMysql()
 
-	db, e = gorm.Open(DatabaseType(c), conn)
+	db, e = gorm.Open("mysql", conn)
 	if e != nil {
-		panic(e)
+		log.Panic(conn)
 	}
 	return db
 
 }
 
-func ConnectMysql(config *config.Config) string {
+func ConnectMysql() string {
 	db := config.GetSub("database")
+
+	log.Println(db.Get("username"))
 	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s%sloc=%s&charset=utf8&parseTime=true",
 		db.GetStringWithDefault("username", "root"),
 		db.GetStringWithDefault("password", "123456"),

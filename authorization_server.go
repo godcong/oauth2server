@@ -168,8 +168,8 @@ func Start() {
 }
 
 func serverAddr() (r string) {
-	addr := config.GetSub("system").GetStringWithDefault("port", "localhost")
-	port := config.GetSub("system").GetStringWithDefault("port", "7890")
+	addr := config.GetSub("system").GetStringWithDefault("addr", "")
+	port := config.GetSub("system").GetStringWithDefault("port", "8080")
 
 	r = strings.Join([]string{
 		addr,

@@ -30,7 +30,7 @@ func ConnectInit(config *config.Config) string {
 
 func CreateDatabase(config *config.Config) {
 
-	db, err := sql.Open(model.DatabaseType(config), ConnectInit(config))
+	db, err := sql.Open(model.DatabaseType(), ConnectInit(config))
 	if err != nil {
 		panic(err)
 	}

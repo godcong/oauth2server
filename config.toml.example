@@ -2,7 +2,7 @@
    name = "mysql"
    username = "root"
    password = "123456"
-   addr = "localhost"
+   addr = "172.17.0.3"
    port = "3306"
    schema = "oauth2"
    local = "Asia/Shanghai"
@@ -11,10 +11,10 @@
 [redis]
 #user=root
 #password=123456
-port=6379
-#addr=localhost
+port="6379"
+addr="172.17.0.2"
 #db=8
 
 [system]
 #addr = "localhost"
-port = 7890
+port = "8080"

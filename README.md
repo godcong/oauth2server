@@ -1,7 +1,38 @@
 # Auth2接口文档
 
-### 配置域名：oa.mana.com
-### 测试域名：oatest.mana.com
+
+#环境相关:
+
+###说明:
+config.toml可以从[URL](github.com/godcong/oauth2server)的docker路径下下载
+
+### 第一步修改config.toml配置文件:
+[database]
+name = "mysql"
+username = "root"
+password = "123456"
+addr = "172.17.0.3"
+port = "3306"
+schema = "oauth2"
+local = "Asia/Shanghai"
+param = "?"
+
+[redis]
+\#user=root
+\#password=123456
+port="6379"
+addr="172.17.0.2"
+\#db=8
+
+### 第二步初始化数据库:
+> docker run -v [config.toml所在目录]:/home/config
+ godcong/oauth2server /go/src/github.com/godcong/oauth2server/cmd -c "/home/config/config.toml" init
+
+### 第三部运行服务:
+ docker run -it --name o2s -P -v [config.toml所在目录]:/home/config godcong/oauth2server
+
+
+# 服务相关:
 
 # Step 1. 登陆授权
 ## 跳转到：/authorize  
