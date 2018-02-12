@@ -31,6 +31,9 @@ addr="172.17.0.2"
 ### 第三部运行服务:
  docker run -it --name o2s -P -v [config.toml所在目录]:/home/config godcong/oauth2server
 
+### 创建客户端:
+ docker run -v [config.toml所在目录]:/home/config
+  godcong/oauth2server /go/src/github.com/godcong/oauth2server/cmd -c "/home/config/config.toml" client [redirect url]
 
 # 服务相关:
 
