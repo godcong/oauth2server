@@ -4,7 +4,7 @@
 #环境相关:
 
 ###说明:
-config.toml可以从[URL](github.com/godcong/oauth2server)的docker路径下下载
+config.toml可以从[URL](https://github.com/godcong/oauth2server/tree/master/docker)的docker路径下下载
 
 ### 第一步修改config.toml配置文件:
 [database]
